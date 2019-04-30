@@ -133,8 +133,6 @@ public class Pathfinder {
                 //chance for the only possible next move to be running into its own tail and dying
                 shouldMove = true;
             } else {
-                if (!canFindPath(snake.snakeHead, snake.getSnakeTail())) System.out.println("cant reach tail after moving to goal");
-                else System.out.println("error, distance to tail : " + snake.snakeHead.getDistanceTo(snake.getSnakeTail()));
                 shouldMove = false;
             }
 
@@ -150,7 +148,7 @@ public class Pathfinder {
             }
             //cant reach tail after moving to food
             return getCellFurthestFromGoal(start, goal);
-        } else System.out.println("cant find food");
+        }
 
         //if there is no possible move to the food or if after moving, the tail cannot be found, then stall until a
         //path opens up
@@ -165,27 +163,16 @@ public class Pathfinder {
         //find which neighbouring cell is furthest away from the goal. The neighbouring cell should only be considered
         //if the snake can still find its own tail after moving to that cell
         for (int i = 0; i < 4; i++) {
-            System.out.println(snake.getSnakeTail());
-            System.out.println("neighbour : " + neighbours[i]);
-
             if (game.isInLegalCell(neighbours[i]) && neighbours[i].getDistanceTo(goal) > maxDistance) {
                 if (canFindPath(neighbours[i], snake.getSnakeTail())) {
                     maxDistanceCell = neighbours[i];
                     maxDistance = neighbours[i].getDistanceTo(goal);
-                } else {
-                    System.out.println("can't find snakeTail");
                 }
-            } else {
-                if (!game.isInLegalCell(neighbours[i])) System.out.println("not legal cell");
-                else if (neighbours[i].getDistanceTo(goal) <= maxDistance) System.out.println("not furthest cell");
-                System.out.println("neighbour is nono");
             }
-
         }
         //No cell is found sometimes when the snake is next to its tail. In these cases, the snake should follow its
         //tail. It will never hit itself by following its tail.
         if (maxDistanceCell ==  null) {
-            System.out.println("oops");
             return snake.getSnakeTail();
         }
         return maxDistanceCell;
@@ -217,7 +204,6 @@ public class Pathfinder {
                 //if tail can be found and the length of this path to the tail is longer than any previously calculated
                 //and the food can still be found, set this cell to the max distance cell from tail
                 distanceToTail = reconstructPathFrom(snake.getSnakeTail()).size();
-                System.out.println("Length to Tail : " + distanceToTail);
                 if (distanceToTail > maxDistance && canFindTail && canFindPath(neighbours[i], goal)) {
                     maxDistanceCell = neighbours[i];
                     maxDistance = distanceToTail;
